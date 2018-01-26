@@ -41,10 +41,23 @@
     line-height: 60px; /* Vertically center the text there */
     background-color: #404040;
   }
+
+  #banner_blockad {
+    display: none;
+    margin-bottom: 0px;
+    padding: 20px 10px;
+    background: #230002;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+  }
   </style>
 </head>
 <body>
-
+  <div id="banner_blockad">
+    Nosso site necessita de que você desabilite o seu plugin AdBlock para vizualição dos links de livros.<br>
+    Obrigado por contribuir com o Paiol.
+  </div>
   <!-- Navbar-->
   <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -205,5 +218,34 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
           integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
           crossorigin="anonymous"></script>
+
+  <script>var blockAdBlock = false;</script>
+  <script src="./blockadblock.js"></script>
+  <script type="text/javascript">
+    blockAdBlock = new BlockAdBlock({
+      checkOnLoad: true,
+      resetOnEnd: true
+    });
+    // Function called if an AdBlock is not detected
+    function adBlockNotDetected() {
+      console.log('AdBlock is not enabled');
+      document.getElementById('banner_blockad').style.display='none';
+    }
+    // Function called if an AdBlock is detected
+    function adBlockDetected() {
+      console.log('AdBlock is enabled');
+      document.getElementById('banner_blockad').style.display='block';
+    }
+
+    // Recommended audit because AdBlock lock the file 'blockadblock.js' 
+    // If the file is not called, the variable does not exist 'blockAdBlock'
+    // This means that AdBlock is present
+    if(typeof blockAdBlock === 'undefined') {
+      adBlockDetected();
+    } else {
+      blockAdBlock.onDetected(adBlockDetected);
+      blockAdBlock.onNotDetected(adBlockNotDetected);
+    }
+  </script>
 </body>
 </html>
